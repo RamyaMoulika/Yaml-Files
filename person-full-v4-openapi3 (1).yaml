@@ -1,0 +1,2041 @@
+openapi: 3.0.3
+info:
+  title: "Persons Full API"
+  version: "4.0"
+  description: This is the Persons Full API
+
+tags:
+  - name: PersonsFullV4
+
+paths:
+  /persons/full:
+    get:
+      tags:
+        - PersonsFullV4
+      operationId: personsFullV4
+      summary: This would fetch all the FIRM Member/External member details for the given query string
+      description: |-
+        <b>API Description:</b> This API performs a person search on the
+        given the search query (q). It looks up both FIRM/External Members. It also
+        provides a host of other details to perform the search on such as the fmno,Names,
+        Office details, etc.</br>This API can also additionally provide confidential
+        information(purple data) about persons like the compensation details. If you
+        would like access to this data please mention it your onboarding form and
+        contact the ORE APM team for the additional approval for the same.<br/>
+        <b>Business Logic/Filter on data:</b> The API currently displays only the basic set of
+        fields from the entire response set. For the full/specific set of fields,
+        please use the fields parameter with an asterix or the specific block /field
+        names<br/>
+        <b>Source overview: </b> API Gateway>ES>SnowFlake<br/>
+        <b>Security Level:</b> Level 2 (Permissioned)<br/>
+        <b>Data refresh frequency: </b>Every 3 hour<br/>
+        <b>Any exceptional scenarios associated to API?:</b> The api accepts the access token/apikey only in the header.
+        The total no of records displayed are 10 with start record at 1. If you wish to change this, utilize the limit
+        and the offset params.<br/>
+      parameters:
+        - name: q
+          in: query
+          description: Use the 'q' parameter to do a full text search on Persons Full API.<br/>
+          required: true
+          schema:
+            type: string
+        - name: core.fmno
+          in: query
+          description: Person FMNO
+          schema:
+            type: string
+        - name: core.firstName
+          in: query
+          description: Person First Name
+          schema:
+            type: string
+        - name: core.lastName
+          in: query
+          description: Person Last name
+          schema:
+            type: string
+        - name: core.preferredName
+          in: query
+          description: Person Preferred Name
+          schema:
+            type: string
+        - name: core.preferredLastName
+          in: query
+          description: Person Preferred Last Name
+          schema:
+            type: string
+        - name: core.fullName
+          in: query
+          description: Person Full Name
+          schema:
+            type: string
+        - name: core.alumniStatus
+          in: query
+          description: Flag which indicates if Firm Member has ever been the alumni
+            in the Firm. For Active employees who were rehired in the Firm this flag
+            will be Y to indicate that person was earlier with the Firm. Possible valyes are Y, N
+          schema:
+            type: string
+        - name: core.leaveStatus
+          in: query
+          description: Person Leave Status Possible values are Yes, No
+          schema:
+            type: string
+        - name: core.internalExternalFlag
+          in: query
+          description: Flag which indicates whether person in Internal or External to
+            the Firm. e.g. Internal, External
+          schema:
+            type: string
+        - name: core.workerType
+          in: query
+          description: Indicates a worker type to which a firm member is categorized
+            e.g. ("Alumni","Non Partner", "Partner"..etc)
+          schema:
+            type: string
+        - name: core.workerStatus
+          in: query
+          description: Indicates whether Firm Member is Active or Inactive in the Firm.
+          schema:
+            type: string
+        - name: core.geoLocationName
+          in: query
+          description: The name of the office where the Firm member is located; the
+            physical location of a Firm member e.g. "London", "Chennai - Brigade WTC"
+          schema:
+            type: string
+        - name: core.gocOfficeCode
+          in: query
+          description: Three letter goc office code to which a person belongs to e.g. LON, RYD
+          schema:
+            type: string
+        - name: core.gocOfficeDesc
+          in: query
+          description: The description of the goc office code to which a person belongs to e.g. London, Riyadh
+          schema:
+            type: string
+        - name: core.gocDepartmentName
+          in: query
+          description: Characterization of the Department typically describing the function. e.g. "Client Engagements/Consulting", "DnA Remote Delivery"
+          schema:
+            type: string
+        - name: core.jobRoleCategoryId
+          in: query
+          description: A foreign key referring to the primary key of Job_Role_Category_Ref
+            table.Identified by the job role category name that the skill code belongs to e.g. 1380705
+          schema:
+            type: integer
+            format: int64
+        - name: core.jobRoleCategoryName
+          in: query
+          description: Defines the degree of client orientation of a role a Firm Member
+            belongs to (direct, indirect or little to none); Roll up of the Job Role
+            Sub Category e.g. "Client Service Professionals", "Firm Service Professionals"
+          schema:
+            type: string
+        - name: core.jobRoleCategoryCode
+          in: query
+          description: Provides the code of the job role category e.g. CSP, FSP, ESP
+          schema:
+            type: string
+        - name: core.jobRoleSubCategoryId
+          in: query
+          description: A foreign key referring to the primary key of the job_role_sub_category_ref
+            table. Identified by the job role sub category name that the skill code to e.g. 1380709
+          schema:
+            type: integer
+            format: int64
+        - name: core.jobRoleSubCategoryName
+          in: query
+          description: Indicates the job role sub category name a Firm Members belongs
+            to. It serves to cluster and manage the various paths at the Firm; Roll
+            up of job role path. e.g. "Consulting", "Consulting Services & Support"
+          schema:
+            type: string
+        - name: core.jobRolePathId
+          in: query
+          description: A foreign key referring to the primary key of job_role_path_ref
+            table. Identified by the job role path name that the person belongs to e.g. 1588908
+          schema:
+            type: integer
+            format: int64
+        - name: core.jobRolePathName
+          in: query
+          description: Defines the type of work a Firm member in a certain role performs;
+            Roll up of Skill Code e.g. "Expert Consulting", "Solution Delivery"
+          schema:
+            type: string
+        - name: core.jobImpactBandCode
+          in: query
+          description: A code which defines the scope and degree of contribution of
+            a role/skill code; Roll up of Sub Impact Band e.g. 1, 2 etc
+          schema:
+            type: string
+        - name: core.jobSubImpactBandCode
+          in: query
+          description: A code which  specifies the scope and degree of contribution
+            of a role/skill code; indicates a trajectory within a band; Roll up of Skill e.g. A, B etc
+            Code
+          schema:
+            type: string
+        - name: core.futureHireFlag
+          in: query
+          description: Flag which indicates whether person is future hire to the Firm. Possible value are Y, N
+          schema:
+            type: string
+        - name: hr.hireDate
+          in: query
+          description: Hire Date of a person. Search for a specific date. Ex:personal.hireDate=1987-08-17T00:00:00.000Z
+          schema:
+            type: string
+        - name: hr.actualTerminationDate
+          in: query
+          description: The last date of employment Ex:Single- hr.actualTerminationDate=1987-08-17T00:00:00.000Z
+          schema:
+            type: string
+        - name: hr.careerTitle
+          in: query
+          description: Firm members job title e.g. "Junior Associate", "Senior Data Engineer I"
+          schema:
+            type: string
+        - name: personal.dateOfBirth
+          in: query
+          description: The date the Firm member/External Worker was born. Search for
+            a specific date. Ex:personal.dateOfBirth=1987-08-17T00:00:00.000Z
+          schema:
+            type: string
+        - name: personal.gender
+          in: query
+          description: Sex of the Firm member/External Worker e.g. M, F
+          schema:
+            type: string
+        - name: personal.birthCountryCode
+          in: query
+          description: abbreviation for the country in which a Firm member
+            was born in e.g. USA, IND
+          schema:
+            type: string
+        - name: personal.maidenName
+          in: query
+          description: The Firm member's prior surname, typically prior to marriage
+          schema:
+            type: string
+        - name: personal.executiveAssistants_executiveAssistantFmno
+          in: query
+          description: Executive Assistant FMNO e.g. 43432
+          schema:
+            type: string
+        - name: identification.identificationName
+          in: query
+          description: Identification Name of the person. Ex- ADSName
+          schema:
+            type: string
+        - name: identification.identificationTypeName
+          in: query
+          description: Identification Type. e.g. ADS
+          schema:
+            type: string
+        - name: lastUpdateDate
+          in: query
+          description: Date when person record was last updated in datahub e.g. "2023-03-30T23:54:18Z"
+          schema:
+            type: string
+        - name: contact.emails.emailAddress
+          in: query
+          description: Official mailing address of a Firm Member (LN_Internet) e.g. abc@mckinsey.com
+          schema:
+            type: string
+        - name: contact.personalemails.emailAddress
+          in: query
+          description: Personal Email Address of a Firm Member e.g. test@gmail.com
+          schema:
+            type: string
+        - name: contact.phones.firmDirectoryFlag
+          in: query
+          description: Indicates whether or not the Firm Member's telephone number is
+            to be displayed in the Firm's Directory. (Valid values are 'Y' or 'N')
+          schema:
+            type: string
+        - name: offset
+          in: query
+          description: |-
+            Indicates start of record. Start of record by default is from 1.
+            Use this in combination with limit for paginating results
+          schema:
+            type: integer
+            format: int32
+        - name: limit
+          in: query
+          description: |-
+            Indicates no of records to be returned. Default is 10.
+            Use this in combination with offset for paginating results
+          schema:
+            type: integer
+            format: int32
+        - name: fields
+          in: query
+          required: true
+          description: |-
+            Mandatory parameter. Use this to determine the fields returned in the response.
+            For any specific fields under an array object
+            use the . notation. Ex- contact.emails.emailAddress. Separate multiple values
+            with a comma.
+          style: form
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
+        - name: sort
+          in: query
+          description: |-
+            Returns the record in sorted order.
+            Allowed value: fieldname asc or fieldname desc
+            (where fieldname can be core.fmno, core.firstName etc.)
+          style: form
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
+        - name: omitNullFields
+          in: query
+          description: Use this field to control the null value fields in the response
+            set. It accepts 'true' or 'false'. The default is set to 'true'. true indicates
+            that the response set will not contain the fields that have null value and
+            false indicates the response will contain the fields that have the null
+            values
+          schema:
+            type: string
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetPersonsFullResponse'
+        400:
+          description: Bad Request being made.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        403:
+          description: Unauthorized Request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    post:
+      tags:
+        - PersonsFullV4
+      operationId: personsV4BulkSearch
+      summary: This would fetch all the persons(internal and external) for the given
+        list of fmnos
+      description: |-
+        <b>API Description:</b> This API performs a person search for
+        given a list of fmnos. It looks up both FIRM/External Members.<br/>
+        <b>Business Logic/Filter on data:</b> The API currently displays only the basic set of
+        fields from the entire response set. For the full/specific set of fields,
+        please use the fields parameter with an asterix or the specific block /field
+        names<br/>
+        <b>Source overview: </b> API Gateway>ES>SnowFlake<br/>
+        <b>Security Level:</b> Level 2 (Permissioned)<br/>
+        <b>Data refresh frequency :</b>At every 30th minute<br/>
+        <b>Any exceptional scenarios associated to API?:</b> The api accepts the access token/apikey only in the header.
+        The total no of records displayed are 10 with start record at 1. If you wish to change this, utilize the limit
+        and the offset params.<br/>
+      parameters:
+        - name: fields
+          in: query
+          description: Fields to be returned
+          style: form
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PersonFmnoList'
+        description: List of fmnos
+        required: true
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetPersonsFullResponse'
+        400:
+          description: Bad Request being made.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        403:
+          description: Unauthorized Request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /persons/full/post:
+    post:
+      tags:
+        - PersonsFullV4Post
+      operationId: getPersonFullPostV4
+      summary: This would fetch all the persons(internal and external) for the given
+        search criteria defined in filters
+      description: |-
+        <b>API Description:</b> This API performs a person search on the
+        search criteria defined in the request body. It looks up both FIRM/External Members. It also
+        provides a host of other details to perform the search on different filters as the fmno,Names,
+        Office details, etc.</br>This API can also additionally provide confidential
+        information(purple data) about persons like the compensation details. If you
+        would like access to this data please mention it your onboarding form and
+        contact the ORE APM team for the additional approval for the same.<br/>
+        <b>Business Logic/Filter on data:</b> The API currently displays only the basic set of
+        fields from the entire response set. For the full/specific set of fields,
+        please use the fields parameter with an asterix or the specific block /field
+        names<br/>
+        <b>Source overview: </b> API Gateway>ES>SnowFlake<br/>
+        <b>Security Level:</b> Level 2 (Permissioned)<br/>
+        <b>Data refresh frequency :</b>At every 30th minute<br/>
+        <b>Any exceptional scenarios associated to API?:</b> The api accepts the access token/apikey only in the header.
+        The total no of records displayed are 10 with start record at 1. If you wish to change this, utilize the limit
+        and the offset params.<br/>
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CommonRequestBodyPO'
+        required: true
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetPersonsFullResponse'
+        400:
+          description: Bad Request being made.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        403:
+          description: Unauthorized Request/Axiomatics Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse' 
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  schemas:
+    GetPersonsFullResponse:
+      description: Response Model
+      type: object
+      properties:
+        response:
+          $ref: '#/components/schemas/PersonsFullResponse'
+        facet_counts:
+          $ref: '#/components/schemas/FacetCount'
+
+    ErrorResponse:
+      description: Response Model
+      type: object
+      properties:
+        response:
+          $ref: '#/components/schemas/ErrorRequestResponse'
+
+    ErrorRequestResponse:
+      description: Bad Request/Forbidden Request/ Internal Server Error
+      type: object
+      properties:
+        x-correlation-id:
+          description: The transaction Id associated with this data response
+          type: string
+        status:
+          $ref: '#/components/schemas/Status'
+        noOfRecords:
+          description: Total Number of Records
+          type: integer
+          format: int64
+        apiVersion:
+          description: API version
+          type: string
+        params:
+          $ref: '#/components/schemas/Parameters'
+      required:
+        - x-correlation-id
+        - status
+
+    Status:
+      description: The overall status of this response
+      type: object
+      properties:
+        httpStatusCode:
+          description: The http status code associated with this response
+          type: integer
+          format: int32
+        message:
+          description: The http status message associated with this response
+          type: string
+        error:
+          $ref: '#/components/schemas/Error'
+      required:
+        - httpStatusCode
+        - message
+
+    Error:
+      description: Error Response
+      type: object
+      properties:
+        subCode:
+          description: The API error code corresponding to this error
+          type: integer
+          format: int32
+        message:
+          description: The API error message corresponding to this error e.g. Axiomatics returned Indeterminate decision. Denying request!
+          type: string
+        reason:
+          description: The reason for this API error
+          type: string
+        HTTP_Method:
+          description: HTTP Method's e.g. GET or POST or PUT
+          type: string
+        Path:
+          description: HTTP Path e.g. /v4/persons/full
+          type: string
+        Possible_Error:
+          description: Possible HTTP Error's e.g. Access Denied / Verify the OKTA Token
+          type: string
+        Response_Type:
+          description: Response type e.g. ACCESS_DENIED
+          type: string
+        Stage:
+          description: Stage/Version e.g. v4
+          type: string
+        Error_Message:
+          description: HTTP Specific Error e.g. User is not authorized to access this resource with an explicit deny
+          type: string
+    PersonsFullResponse:
+      type: object
+      description: Returns person data.
+      properties:
+        correlationID:
+          description: The correlation Id associated with this data response
+          type: string
+        status:
+          $ref: '#/components/schemas/Status'
+        noOfRecords:
+          description: Total Number of Records
+          type: integer
+          format: int64
+        apiVersion:
+          description: API version
+          type: string
+        params:
+          $ref: '#/components/schemas/Parameters'
+        persons:
+          type: array
+          items:
+            $ref: '#/components/schemas/Person'
+
+    Parameters:
+      description: optional query parameters
+      type: object
+      properties:
+        q:
+          description: q param
+          type: string
+        omitNullFields:
+          description: Omit Null Fields
+          type: string
+        offset:
+          description: Indicates start of record. Start of record by default is from 1. Use this in combination with limit for paginating results
+          type: integer
+          format: int32
+        limit:
+          description: Indicates no of records to be returned. Default is 10. Use this in combination with offset for paginating results
+          type: integer
+          format: int32
+        fields:
+          description: |-
+            Use this to determine the fields returned in the response. Separate the required fields with a comma.
+            Ex: core.fmno,contact.emails.emailAddress
+            If not passed, all the available fields will be returned
+          type: string
+        sort:
+          description: |-
+            Returns the record in sorted order.
+            Allowed value: fieldname asc or fieldname desc
+            (where fieldname can be core.fmno, core.firstName, etc.)
+          type: string
+
+    Person:
+      type: object
+      description: List of person results for the given search terms
+      properties:
+        lastUpdateDate:
+          description: Last updated date e.g. "2023-07-18T11:57:39Z"
+          type: string
+        priorExperience:
+          $ref: '#/components/schemas/PriorExperience'
+        contact:
+          $ref: '#/components/schemas/Contact'
+        qualification:
+          $ref: '#/components/schemas/Qualification'
+        personal:
+          $ref: '#/components/schemas/Personal'
+        expertise:
+          $ref: '#/components/schemas/Expertise'
+        partner:
+          type: array
+          items:
+            $ref: '#/components/schemas/Partner'
+        hr:
+          $ref: '#/components/schemas/Hr'
+        compensation:
+          $ref: '#/components/schemas/Compensation'
+        identification:
+          type: array
+          items:
+            $ref: '#/components/schemas/Identification'
+        core:
+          $ref: '#/components/schemas/Core'
+        tenure:
+          $ref: '#/components/schemas/Tenure'
+
+    PriorExperience:
+      type: object
+      properties:
+        experience:
+          type: array
+          items:
+            $ref: '#/components/schemas/Experience'
+
+    Experience:
+      type: object
+      description: Contains prior experience details of a person
+      properties:
+        countryName:
+          description: countryName e.g. France, Spain
+          type: string
+        employerCountry:
+          description: employerCountry e.g. FR, ES
+          type: string
+        employerFromDate:
+          description: employerFromDate e.g. 2014-01-01T00:00:00Z
+          type: string
+        employerName:
+          description: employerName e.g. Google, ABC
+          type: string
+        employerToDate:
+          description: employerToDate e.g. 2014-01-01T00:00:00Z
+          type: string
+        foundedByUser:
+          description: foundedByUser e.g. Possible values are Yes, No
+          type: string
+        industry:
+          description: industry e.g. Banking, Energy
+          type: string
+        jobFromDate:
+          description: jobFromDate e.g. 2014-01-01T00:00:00Z
+          type: string
+        jobFunction:
+          description: jobFunction e.g. "Business Technology". "Marketing & Sales"
+          type: string
+        jobName:
+          description: jobName e.g. Manager, President
+          type: string
+        jobPosition:
+          description: jobPosition e.g. "Administrator and operations manager"
+          type: string
+        jobToDate:
+          description: jobToDate e.g. 2014-01-01T00:00:00Z
+          type: string
+        jobType:
+          description: jobType e.g. Full-time, Part-time
+          type: string
+        militaryExperience:
+          description: militaryExperience e.g. Possible values are Yes, No
+          type: string
+        previousEmployerId:
+          description: previousEmployerId e.g. 2418178, 1740834
+          type: integer
+          format: int64
+        previousJobId:
+          description: previousJobId e.g. 1740834, 144400
+          type: integer
+          format: int64
+        updateDate:
+          description: updateDate e.g. 2014-01-01T00:00:00Z
+          type: string
+
+    Contact:
+      type: object
+      description: Provides the contact details
+      properties:
+        emails:
+          type: array
+          items:
+            $ref: '#/components/schemas/Email'
+        phones:
+          type: array
+          items:
+            $ref: '#/components/schemas/Phone'
+        address:
+          type: array
+          items:
+            $ref: '#/components/schemas/Address'
+        personalemails:
+          type: array
+          items:
+            $ref: '#/components/schemas/PersonalEmail'
+
+    Email:
+      type: object
+      description: Provides Firm Member/External workers Official Email address(es)
+      properties:
+        emailAddress:
+          description: Email Address e.g. test@test.com
+          type: string
+        emailContactId:
+          description: Unique identifier for a person's email address. e.g. 4135952
+          type: integer
+          format: int64
+        emailTypeDesc:
+          description: Descriptor of the kind of email address for the FMNO. Possible value LN_Internet
+          type: string
+        emailTypeId:
+          description: A foreign key referring to the primary key of  Email_Ref table.
+            Identified by the email type that the email address is associated to. e.g. 618290
+          type: integer
+          format: int64
+        emailTypeName:
+          description: Name of the kind of email address for the FMNO. Possible value LN_Internet
+          type: string
+        emergencyContactEmail:
+          description: Emergency Contact Email e.g. test@test.com
+          type: string
+        etrFromDate:
+          description: etr From Date. e.g. 1900-01-01T00:00:00Z
+          type: string
+        etrToDate:
+          description: etr To Date. e.g. 1900-01-01T00:00:00Z
+          type: string
+        pecFromDate:
+          description: The date on which an Email address is available for use. e.g. 2018-07-10 00:00:00.000
+          type: string
+        pecToDate:
+          description: The date on which an Email address is no longer applicable. e.g. 2018-07-10 00:00:00.000
+          type: string
+        updateDate:
+          description: Update Date e.g. 2023-03-30T23:54:18Z
+          type: string
+
+    Phone:
+      type: object
+      description: Provides the  most current  Firm Member/External workers Phone Contacts.
+      properties:
+        cityAccessCode:
+          description: Area code of the telephone number for a city or local region
+            in a country. e.g. 401, 961
+          type: string
+        countryAccessCode:
+          description: Access code of the telephone number for a country. e.g. 46, 91
+          type: string
+        firmDirectoryFlag:
+          description: Firm Directory Flag. Possible values are Y, N
+          type: string
+        fullPhoneNumber:
+          description: Firm member's full telephone number including country access
+            code and city access code e.g. xxx-xxx-xxxx
+          type: string
+        phoneContactId:
+          description: Unique identifier for a person phone record. e.g. 206298
+          type: integer
+          format: int64
+        phoneNumber:
+          description: Firm Member's telephone number. e.g. xxx-xxx-xxxx
+          type: string
+        phoneTypeCode:
+          description: A Unique code that indicates the phone type e.g. MCK_OF, MCK_M, MCK_M2, C
+          type: string
+        phoneTypeDesc:
+          description: Describes the call destination or purpose of a particual telephone e.g. VOIP, Office - Primary-McKinsey Office - Primary, Mobile - Primary-McKinsey Mobile - Primary
+            number.
+          type: string
+        phoneTypeId:
+          description: A foreign key referring to the primary key of phone_type_ref
+            table. Identified by the  phone types  that the person phone contact is
+            associated to. Possible values are -''Home - Primary'',''Home Fax'',''McKinsey
+            Office - Primary''..etc. e.g. 212, 215
+          type: integer
+          format: int32
+        phoneTypeName:
+          description: Indicates the call destination or purpose of a particular telephone
+            number, e.g. 'School', 'Home', 'Emergency', etc.
+          type: string
+        ppcFromDate:
+          description: The date on which person phone contact is available. e.g. 2022-02-25T00:00:00Z
+          type: string
+        ppcToDate:
+          description: The date on which person phone contact is no longer available e.g. 2022-02-25T00:00:00Z
+            for use.
+          type: string
+        ptrFromDate:
+          description: The date on which phone type is available. e.g. 2022-02-25T00:00:00Z
+          type: string
+        ptrToDate:
+          description: The date on which phone type is no longer available for use. e.g. 2022-02-25T00:00:00Z
+          type: string
+        updateDate:
+          description: Update Date e.g. e.g. 2022-02-25T00:00:00Z
+          type: string
+
+    Address:
+      type: object
+      description: Provides Firm Member/External workers Official Email address(es)
+      properties:
+        addressLine1:
+          description: e.g. "123 Address Line 1"
+          type: string
+        addressLine2:
+          description: e.g. "210 Broadway"
+          type: string
+        addressLine3:
+          description: e.g. "Musashino-City, Tokyo", "Victoria Island"
+          type: string
+        addressStyleCode:
+          description: e.g. JP_GLB, SG_GLB
+          type: string
+        addressStyleId:
+          description: e.g. 174, 169
+          type: integer
+          format: int64
+        addressStyleName:
+          description: e.g. "Japan (International)", "Norway (International)"
+          type: string
+        addressTypeCode:
+          description: e.g. home, mailing
+          type: string
+        addressTypeId:
+          description: e.g. 496, 498
+          type: integer
+          format: int64
+        addressTypeName:
+          description: e.g. Primary, Alternate
+          type: string
+        countryCode:
+          description: e.g. USA, SGP
+          type: string
+        countryId:
+          description: e.g. 239, 224
+          type: integer
+          format: int32
+        countryName:
+          description: Singapore, Israel
+          type: string
+        countryRegion:
+          description: e.g. Central Singapore, Athens
+          type: string
+        firmDirectoryFlag:
+          description: Possible values Y, N
+          type: string
+        fromDate:
+          type: string
+        invalidMailingAddressFlag:
+          description: Possible values Y, N
+          type: string
+        mailingFlag:
+          description: Possible values Y, N
+          type: string
+        otherAddressInfo:
+          description: e.g. "Albany|New York|", "Contra Costa|California|"
+          type: string
+        personAddressId:
+          description: e.g. 3769034
+          type: integer
+          format: int64
+        postalCode:
+          type: string
+        source:
+          description: source e.g. PC
+          type: string
+        stateCode:
+          description: stateCode e.g. FL, MA
+          type: string
+        stateProvince:
+          description: stateProvince e.g. Florida, Massachusetts
+          type: string
+        toDate:
+          description: toDate e.g. 2023-03-30T23:54:18Z
+          type: string
+        townOrCity:
+          description: townOrCity e.g. Marlborough, Sao Paulo
+          type: string
+        updateDate:
+          description: updateDate e.g. 2023-03-30T23:54:18Z
+          type: string
+
+    PersonalEmail:
+      type: object
+      properties:
+        emailAddress:
+          description: emailAddress e.g. test@test.com
+          type: string
+        emailContactId:
+          description: emailContactId e.g. 314349
+          type: integer
+          format: int64
+        emailTypeDesc:
+          description: emailTypeDesc e.g. Personal
+          type: string
+        emailTypeId:
+          description: emailTypeId e.g. 618287
+          type: integer
+          format: int64
+        emailTypeName:
+          description: emailTypeName e.g. Personal
+          type: string
+        emergencyContactEmail:
+          description: emergencyContactEmail e.g. test@test.com
+          type: string
+        etrFromDate:
+          description: etrFromDate e.g. 2023-03-30T23:54:18Z
+          type: string
+        etrToDate:
+          description: etrToDate e.g. 2023-03-30T23:54:18Z
+          type: string
+        legacyEmailTypeName:
+          description: legacyEmailTypeName e.g. Possible value is "Internet"
+          type: string
+        pecFromDate:
+          description: pecFromDate e.g. 2023-03-30T23:54:18Z
+          type: string
+        pecToDate:
+          description: pecToDate e.g. 2023-03-30T23:54:18Z
+          type: string
+        updateDate:
+          description: updateDate e.g. 2023-03-30T23:54:18Z
+          type: string
+
+    Qualification:
+      type: object
+      properties:
+        qualificationL2L3:
+          type: array
+          items:
+            $ref: '#/components/schemas/QualificationL2L3'
+        qualificationDegree:
+          type: array
+          items:
+            $ref: '#/components/schemas/QualificationDegree'
+
+    QualificationL2L3:
+      type: object
+      properties:
+        additionalConcentration:
+          description: additionalConcentration e.g. "Operations", PEPI
+          type: string
+        institution:
+          description: institution e.g. "McKinsey & Company"
+          type: string
+        primaryConcentration:
+          description: primaryConcentration e.g. "Banking & Securities", "Operations"
+          type: string
+        primaryConShortName:
+          type: string
+        qualificationCategory:
+          description: qualificationCategory Possible value is "L2/L3"
+          type: string
+        qualificationEndDate:
+          description: qualificationEndDate e.g. "2023-05-05 00:00:00.000"
+          type: string
+        qualificationId:
+          description: qualificationId e.g. 1450072
+          type: integer
+          format: int64
+        qualificationProgress:
+          type: string
+        qualificationStartDate:
+          description: qualificationStartDate e.g. "2023-05-05 00:00:00.000"
+          type: string
+        qualificationStatus:
+          description: qualificationStatus Possible values are L1, L2, L3
+          type: string
+        qualificationType:
+          description: qualificationType Possible values are "Capable", "Active"
+          type: string
+        updateDate:
+          description: updateDate e.g. "2023-03-30T23:54:18Z"
+          type: string
+
+    QualificationDegree:
+      type: object
+      properties:
+        gpa:
+          type: number
+          format: float
+        institution:
+          description: institution e.g. "Northeastern University",
+          type: string
+        primaryConcentration:
+          description: primaryConcentration e.g. "Business Administration", ""Health Care Management"
+          type: string
+        qualificationCategory:
+          description: qualificationCategory e.g. "Degree"
+          type: string
+        qualificationEndDate:
+          description: qualificationEndDate e.g. "1988-02-01T00:00:00Z"
+          type: string
+        qualificationId:
+          description: qualificationId e.g. 112021
+          type: integer
+          format: int64
+        qualificationStartDate:
+          description: qualificationStartDate e.g. "1900-01-01T00:00:00Z"
+          type: string
+        qualificationStatus:
+          description: qualificationStatus Possible values are Completed, Incomplete
+          type: string
+        qualificationType:
+          description: qualificationType e.g. "Postgraduate", "Certificate"
+          type: string
+        subjectEndDate:
+          description: subjectEndDate e.g. "1900-01-01T00:00:00Z"
+          type: string
+        subjectHonor:
+          description: subjectHonor e.g. "Subject", "Honor"
+          type: string
+        subjectsTakenId:
+          description: subjectsTakenId e.g. 17422
+          type: integer
+          format: int64
+        subjectStartDate:
+          description: subjectStartDate e.g. "1900-01-01T00:00:00Z"
+          type: string
+        updateDate:
+          description: updateDate e.g. "2023-12-08T21:27:15Z"
+          type: string
+
+    Personal:
+      type: object
+      description: Provides the  most current Firm Member/External workers Personal
+        Data - DOB, Gender,Executive Assistant details.
+      properties:
+        birthCountryCode:
+          description: Birth Country Code e.g. USA, IND
+          type: string
+        dateOfBirth:
+          description: The date the Firm member/External Worker  was born. e.g. "2002-05-23T00:00:00Z"
+          type: string
+        deceasedDate:
+          description: Deceased Date e.g. 2002-05-23T00:00:00Z
+          type: string
+        dob:
+          description: Date of birth in mm-dd format e.g. 12-16
+          type: string
+        firstCitizenship:
+          description: First Citizenship e.g. USA, GBR
+          type: string
+        executiveAssistants:
+          type: array
+          items:
+            $ref: '#/components/schemas/ExecutiveAssistant'
+        gender:
+          description: Sex of the Firm member/External Worker. e.g. M, F
+          type: string
+        legal:
+          type: array
+          items:
+            $ref: '#/components/schemas/Legal'
+        genderOption:
+          description: Gender Option e.g. M, F
+          type: string
+        maidenName:
+          description: Maiden Name e.g. Wilson
+          type: string
+        maritalStatusCode:
+          description: Marital Status Code e.g. S, M
+          type: string
+        maritalStatusName:
+          description: Indicates the marital status of a Firm Member, e.g., 'Married',
+            'Divorced', 'Widowed', etc.
+          type: string
+        photos:
+          description: Provide the URL for a person photo.(Medium size) e.g. https://devprofiles.intranet.mckinsey.com/fmno_photos/120631/medium.jpg
+          type: string
+        prefix:
+          description: Words that preceed the last name. e.g. "Mr.", "Dr."
+          type: string
+        previousLastName:
+          description: The prior surname.
+          type: string
+        secondCitizenship:
+          description: Second Citizenship e.g. FIN, KOR
+          type: string
+        thirdCitizenship:
+          description: Third Citizenship e.g. HND, COL
+          type: string
+        townOfBirth:
+          description: Town Of Birth e.g. Beijing, New York City
+          type: string
+        updateDate:
+          description: Update Date e.g. "2023-12-08T21:27:15Z"
+          type: string
+        relationships:
+          type: array
+          items:
+            $ref: '#/components/schemas/Relationship'
+        pronounsUsed:
+          description: Indicates pronouns used for a person. e.g. She/Her/Hers or He/Him/His
+          type: string
+
+    ExecutiveAssistant:
+      type: object
+      description: Contains GOC Office details of a person
+      properties:
+        executiveAssistantEndDate:
+          description: The date on which a Firm Member's/External Worker's Executive
+            FMNO is no longer applicable. e.g. "2023-12-08T21:27:15Z"
+          type: string
+        executiveAssistantStartDate:
+          description: The date on which a Firm Member's/External Worker's Executive
+            FMNO is available. e.g. "2021-12-08T21:27:15Z"
+          type: string
+        executiveAssistantFmno:
+          description: The FMNO of a person support person.
+          type: string
+        executiveAssistantType:
+          description: Executive Assistant Type. Possible values "execAssist", "2ndexecassist"
+          type: string
+        updateDate:
+          description: Update Date e.g. "2023-12-08T21:27:15Z"
+          type: string
+
+    Legal:
+      type: object
+      description: Provides Firm Member/External workers Personal Legal Status.Custodian
+        System/Application- ePeople.
+      properties:
+        territoryCode:
+          description: The code of the territory that the person's legal status is
+            associated to. e.g. IN, CN
+          type: string
+        fromDate:
+          description: The date on which a Firm Member's/External Workers Legal Status
+            is available. e.g. "2023-12-08T21:27:15Z"
+          type: string
+        legalStatusDesc:
+          description: Description of the legal relationship between a person and
+            a state. e.g. Citizen, Work Permit
+          type: string
+        legalStatusId:
+          description: A foreign key referring to the primary key of Legal_Status_TYPE_REF
+            table. Identified by the  legal status types that the fmno is associated
+            to .Possible values are Asylee,Nonres Alien--US TIN,Permanent Resident,Work
+            Permit,Citizen,NonResident Taxpayer,Refugee,Visitor/Student/Othr. e.g. 618212
+          type: integer
+          format: int64
+        legalStatusName:
+          description: Name of the legal relationship between a person and a state. e.g. Citizen, Work Permit
+          type: string
+        personLegalStatusId:
+          description: Unique identifier for a person's legal status record e.g. 224710
+          type: number
+        toDate:
+          description: The date on which a Firm Member's/External Workers DGL Legal
+            Status is no longer applicable. e.g. "2023-12-08T21:27:15Z"
+          type: string
+        documentNumber:
+          type: string
+        documentType:
+          description: e.g. GBR_Passport, H-1B1
+          type: string
+        primary:
+          description: Possible values Y, N
+          type: string
+        updateDate:
+          type: string
+
+    Relationship:
+      type: object
+      description: Provides Firm Members' relatives' information, including spouses,
+        children, parents, etc.
+      properties:
+        dateOfBirth:
+          description: Relative's date of birth. e.g. 1987-08-17T00:00:00.000Z
+          type: string
+        firstName:
+          description: Relative's first name.
+          type: string
+        fromDate:
+          description: The date on which a relationship record becomes available for
+            use.
+          type: string
+        gender:
+          description: Indicates whether a Firm Member's relative is male or female.
+          type: string
+        lastName:
+          description: Relative's last name.
+          type: string
+        personRelationId:
+          description: Unique identifier for a record, identified by a unique FMNO. e.g. 3297181
+          type: integer
+          format: int64
+        preferredName:
+          description: Name by which a relative wishes to be called, e.g., nickname.
+          type: string
+        relationship:
+          description: Indicates the kind of the relation to a Firm Member, e.g. 'Father',
+            'Mother', 'Brother', etc. e.g. "Emergency Contact"
+          type: string
+        toDate:
+          description: Date on which a relationshp record becomes invalid and is no
+            longer available for use in creating correlations.
+          type: string
+        updateDate:
+          description: Update Date
+          type: string
+        primaryFlag:
+          description: Primary Flag. Possible values are Y, N
+          type: string
+        name:
+          description: Name e.g. Oliver Kuusiholma
+          type: string
+        phone:
+          description: Phone e.g. xxx-xxx-xxxx
+          type: string
+
+    Expertise:
+      type: object
+      properties:
+        languages:
+          type: array
+          items:
+            $ref: '#/components/schemas/Language'
+
+    Language:
+      type: object
+      properties:
+        languageFluencyId:
+          description: e.g. 313053
+          type: integer
+          format: int64
+        lfrFromDate:
+          description: e.g. 1900-01-01T00:00:00Z
+          type: string
+        lrFromDate:
+          description: e.g. 1900-01-01T00:00:00Z
+          type: string
+        languageName:
+          description: e.g. German, Spanish
+          type: string
+        fluencyId:
+          description: e.g. 618414
+          type: integer
+          format: int64
+        fluencyName:
+          description: e.g. "7-Native fluency", "6-Fluent"
+          type: string
+        updateDate:
+          type: string
+        lrToDate:
+          description: e.g. 1900-01-01T00:00:00Z
+          type: string
+        languageId:
+          description: e.g. 91, 249
+          type: number
+        lfrToDate:
+          description: e.g. 1900-01-01T00:00:00Z
+          type: string
+
+    Partner:
+      type: object
+      properties:
+        effectiveEndDate:
+          description: e.g. 1900-01-01T00:00:00Z
+          type: string
+        effectiveStartDate:
+          description: e.g. 1900-01-01T00:00:00Z
+          type: string
+        evaluationYear:
+          type: string
+        eyEvalYear:
+          description: e.g. 2010, 2013
+          type: string
+        eyTenMm:
+          description: e.g. 140, 240
+          type: string
+        eyTenure:
+          type: string
+        eyTenYear:
+          description: e.g. 12, 4
+          type: string
+        eyTenYymm:
+          description: e.g. 7+0, 2+11
+          type: string
+        personEyTenureId:
+          description: e.g. 80714
+          type: integer
+          format: int64
+        preEyTenMm:
+          description: e.g. 228, 96
+          type: string
+        preEyTenYear:
+          description: e.g. 6.5, 3.5
+          type: string
+        preEyTenYymm:
+          description: e.g. 19+0, 11+6
+          type: string
+        updateDate:
+          description: e.g. 1900-01-01T00:00:00Z
+          type: string
+
+    Hr:
+      type: object
+      description: Provides the Firm Member/External workers Personnel Data (Hire
+        Start/End Dates,  Assignment Category , staffing office , skill code , diversity
+        calssification , PDM details  .Custodian System/Application- ePeople.
+      properties:
+        actualTerminationDate:
+          description: The last date of employment e.g. ACTUAL_TERMINATION_DATE
+          type: string
+        candidateId:
+          description: Candidate Id e.g. 5027602
+          type: string
+        diversityClassification:
+          description: A way to classify roles for EEO use. e.g. "DIVERSITY_CLASSIFICATION", "10 - Manager"
+          type: string
+        employmentType:
+          description: Employment Type e.g. "Exempt Salaried Full time Fixed Term"
+          type: string
+        evaluationCommittee:
+          description: Evaluation Committee e.g. EUR OYG OSL Pre-ASC ASC EM
+          type: string
+        finalProcessingDate:
+          description: Used by Payroll to identify the final payment; may be later
+            than the Terminate Date. e.g. "2023-12-08T21:27:15Z"
+          type: string
+        firstFlexProgram:
+          description: First Flex Program e.g. "Full-time Program", "My Time - Take Time"
+          type: string
+        firstFlexProgramEndDate:
+          description: First Flex Program End Date e.g. "2023-12-08T21:27:15Z"
+          type: string
+        firstFlexProgramStartDate:
+          description: First Flex Program Start Date e.g. "2023-12-08T21:27:15Z"
+          type: string
+        fullTimeEquivalent:
+          description: Full Time Equivalent e.g. 1, 0.9
+          type: string
+        guildArchetypeCode:
+          description: Guild Code e.g. SE, EDAE
+          type: string
+        guildArchetypeName:
+          description: Guild Code e.g. "Software Engineer", "DMOT Practitioner"
+          type: string
+        guildCode:
+          description: Guild Code e.g. DAEN, DMOT
+          type: string
+        guildFamily:
+          description: Guild Family e.g. "Tech Services", "Data Science"
+          type: string
+        guildName:
+          description: Guild Name e.g. "Data Architecture & Engineering", "Digital Marketing Operations & Technology"
+          type: string
+        hireDate:
+          description: When compared with the Hire Date, identifies rehires. e.g. "2023-12-08T21:27:15Z"
+          type: string
+        newJoinerStatus:
+          description: New Joiner Status e.g. "Complete", "Conditional Start"
+          type: string
+        leaves:
+          type: array
+          items:
+            $ref: '#/components/schemas/Leaves'
+        originalHireDate:
+          description: The first day of employment for Firm members and first day
+            of engagement for external workers (non-McKinsey) e.g. "2023-12-08T21:27:15Z"
+          type: string
+        careerTitle:
+          description: Firm members job title. e.g. "Junior Associate", "Senior Data Engineer I"
+          type: string
+        payrollOfficeCode:
+          description: Will be Null going forward, Refer to companyCode field. The office that prepares the payroll/check and ensures that
+            the employee gets paid. e.g. FIR, LON
+          type: string
+        pdmFmno:
+          description: FMNO of the person's Professional Develop Manager (Client facing). e.g. 181402
+          type: string
+        supervisorFmno:
+          description: FMNO of the supervisor/manager assigned to the given colleague. e.g. 04981
+          type: string
+        percentage:
+          description: Deprecated post FCT go live.
+          type: string
+        permanentOfficeCode:
+          description: Permanent Office Code
+          type: string
+        psmFromDate:
+          description: psm From Date e.g. "2023-12-08T21:27:15Z"
+          type: string
+        psmToDate:
+          description: psm To Date e.g. "2023-12-08T21:27:15Z"
+          type: string
+        secondFlexProgram:
+          description: Second Flex Program e.g. "PACE", "Rotational Program"
+          type: string
+        secondFlexProgramEndDate:
+          description: Second Flex Program End Date e.g. "2023-12-08T21:27:15Z"
+          type: string
+        secondFlexProgramStartDate:
+          description: second Flex Program Start Date e.g. "2023-12-08T21:27:15Z"
+          type: string
+        skillCode:
+          description: Job description e.g. JRPS, ASC
+          type: string
+        skillDesc:
+          description: Skill Desc "Senior Data Engineer I", "Junior Analyst"
+          type: string
+        staffingManagerFmno:
+          description: Staffing Manager Fmno e.g. 139748, 78549
+          type: string
+        staffingOfficeCode:
+          description: Deprecated post FCT go live. The 3 letter code which indicates the  cell responsible for
+            making staffing decisions.
+          type: string
+        taxOfficeCode:
+          description: Will be Null going forward, Refer to companyCode field. Tax Office Code e.g. SFO, NYO
+          type: string
+        updateDate:
+          description: Update Date e.g. "2023-12-08T21:27:15Z"
+          type: string
+        workingHourFrequency:
+          description: Working Hour Frequency e.g. WEEKLY
+          type: string
+        workingHours:
+          description: Working Hours e.g. 35, 40
+          type: number
+          format: float
+        supplier:
+          description: supplier e.g. "Media Solutions GmbH", "Axiom Global Limited"
+          type: string
+        primarySponsor:
+          description: primarySponsor e.g.  153154,  48141
+          type: string
+        companyCode:
+          description: companyCode e.g. GB10, US10
+          type: string
+        alternateCompanyCode:
+          description: alternateCompanyCode
+          type: string
+        alternateCompanyCodeName:
+          description: alternateCompanyCodeName
+          type: string
+        confirmToEnd:
+          description: Confirm To End Possible values are T, F
+          type: string
+
+    Leaves:
+      type: object
+      description: Provides Firm Member/External workers Personnel Leave Data.Custodian
+        System/Application- ePeople.
+      properties:
+        leaveActualEndDate:
+          description: The end date of the period of the absence. e.g. "2024-01-30T12:09:24Z"
+          type: string
+        leaveActualStartDate:
+          description: The start date of the period of the absence. e.g. "2024-01-30T12:09:24Z"
+          type: string
+        leaveBenefit:
+          description: leave Benefit e.g. Paid, Unpaid
+          type: string
+        leaveCategory:
+          description: If Leave Type is "vacation", Leave Category is "PTO"; otherwise
+            Leave Category is "Leave"
+          type: string
+        leaveProjectedEndDate:
+          description: The projected end date of the period of the absence e.g. "2024-01-30T12:09:24Z"
+          type: string
+        leaveProjectedStartDate:
+          description: The Projected start date of the period of the absence e.g. "2024-01-30T12:09:24Z"
+          type: string
+        personLeaveId:
+          description: Unique identifier for a person's leave record. e.g. 5244180
+          type: integer
+          format: int64
+        updateDate:
+          description: Update Date e.g. "2024-01-30T12:09:24Z"
+          type: string
+
+    Compensation:
+      type: object
+      properties:
+        perdiem:
+          type: array
+          items:
+            $ref: '#/components/schemas/Perdiem'
+
+    Perdiem:
+      type: object
+      description: Contains GOC Office details of a person
+      properties:
+        fromDate:
+          description: e.g. "2024-01-30T12:09:24Z"
+          type: string
+        perDiemCurrency:
+          description: e.g. USD, EUR
+          type: string
+        perDiemId:
+          description: e.g. 4417438
+          type: integer
+          format: int64
+        rate:
+          description: e.g. 50.00
+          type: string
+        source:
+          description: Possible value is PC
+          type: string
+        toDate:
+          description: e.g. "2024-01-30T12:09:24Z"
+          type: string
+        updateDate:
+          description: e.g. "2024-01-30T12:09:24Z"
+          type: string
+
+    #    IdentificationList:
+    #      type: array
+    #      items:
+    #        $ref: '#/components/schemas/Identification'
+
+    Identification:
+      type: object
+      properties:
+        identificationName:
+          description: e.g. Jan Pedzinski
+          type: string
+        identificationTypeName:
+          description: e.g. ADS
+          type: string
+        linkedinUrl:
+          description: e.g. https://www.linkedin.com/in/ericmlevin
+          type: string
+        updateDate:
+          description: e.g. "2024-01-30T12:09:24Z"
+          type: string
+
+    Core:
+      type: object
+      description: Provides the core details for a Firm Member/External workers-FMNO,
+        Name, Type, Status, Skill Category, Skill Sub Category, Type of Work, Impact
+        Band, Sub Impact Band, Location Office.
+        Custodian System/Application- ePeople
+      properties:
+        alumniStatus:
+          description: Flag which indicates if Firm Member has ever been the alumni
+            in the Firm. For Active employees who were rehired in the Firm this flag
+            will be Y to indicate that person was earlier with the Firm. Possible valyes are Y, N
+          type: string
+        employmentClass:
+          description: Employment Class e.g. Partner, Non Partner
+          type: string
+        employmentClassCode:
+          description: Employment Class Code e.g. PRT, NPRT
+          type: string
+        firmMemberTitle:
+          description: Firm Member Title e.g. "Executive Assistant", "Associate Intern"
+          type: string
+        firstName:
+          description: First name e.g. John
+          type: string
+        fmno:
+          description: Firm Members/External workers firm member number.(Unique identifier
+            for business use). e.g. 12345
+          type: string
+        fmnoPartial:
+          description: Fmno Partial. Not used
+          type: string
+        geoLocationCode4:
+          description: The 4 letter code that identifies  where the Firm member is
+            located; the physical location of a Firm member. e.g. BEBR, MEXI
+          type: string
+        geoLocationFromDate:
+          description: The date on which a Geo Location value becomes available for
+            use. e.g. "2023-03-30T23:54:18Z"
+          type: string
+        geoLocationGroupCode:
+          description: GeoLocation Group Code e.g. UK, IN
+          type: string
+        geoLocationGroupName:
+          description: GeoLocation Group Name e.g. "UK and Ireland", "India"
+          type: string
+        geoLocationId:
+          description: A foreign key referring the primary key of the Geo_Location_ref
+            table . Identified by the geo location code that the Person belongs to. e.g. 69, 54
+          type: integer
+          format: int32
+        geoLocationName:
+          description: The name  of the office where the Firm member is located; the
+            physical location of a Firm member. e.g. "London", "Chennai - Brigade WTC"
+          type: string
+        geoLocationToDate:
+          description: The date on which a Geo Location value becomes invalid and
+            is no longer applicable. e.g. "2020-10-23T14:23:45Z"
+          type: string
+        gocDepartmentCode:
+          description: Department Codes will change as per new structure from FCT. '1' will be added. Five digit department code that indicates where the costs are
+            booked from an accounting perspective for Firm members. e.g. 11200, 12010
+          type: string
+        gocDepartmentName:
+          description: Characterization of the Department typically describing the
+            function. e.g. "Client Engagements/Consulting", "DnA Remote Delivery"
+          type: string
+        gocOfficeCode:
+          description: Three letter goc office code to which a person belongs to. e.g. LON, RYD
+          type: string
+        costCenterCountry:
+          description: Cost Center Country e.g. Canada, Spain
+          type: string
+        gocOfficeDesc:
+          description: The description of the goc office code to which a person belongs to e.g. London, Riyadh
+          type: string
+        impactLevel:
+          description: Impact Level e.g. Red, Orange, Yellow
+          type: string
+        impactLevelDesc:
+          description: Impact Level Desc e.g. "Assistant, Administrator, Jr. Analyst", "AP, Sr. Expert, Director"
+          type: string
+        internalExternalFlag:
+          description: Flag which indicates whether person in Internal or External
+            to the Firm. e.g. Internal, External
+          type: string
+        internFlag:
+          description: Intern Flag. Possible values are Y, null
+          type: string
+        jobImpactBandCode:
+          description: A code which defines the scope and degree of contribution of
+            a role/skill code; Roll up of Sub Impact Band e.g. 1, 2 etc
+          type: string
+        jobRoleCategoryCode:
+          description: Job Role Category Code e.g. CSP, FSP, ESP
+          type: string
+        jobRoleCategoryFromDate:
+          description: The date on which a Role Category Name value becomes available
+            for use. e.g. "2023-03-30T23:54:18Z"
+          type: string
+        jobRoleCategoryId:
+          description: A foreign key referring to the primary key of Job_Role_Category_Ref
+            table.Identified by the job role category name that the skill code belongs
+            to. e.g. 1380705
+          type: integer
+          format: int64
+        jobRoleCategoryName:
+          description: Defines the degree of client orientation of a role a Firm Member
+            belongs to (direct, indirect or little to none); Roll up of the Job Role
+            Sub Category e.g. "Client Service Professionals", "Firm Service Professionals", "Engagement Service Professionals"
+          type: string
+        jobRoleCategoryToDate:
+          description: The date on which a Role Category Name value becomes invalid
+            and is no longer applicable. e.g. 2000-01-01T00:00:00Z
+          type: string
+        jobRolePathFamilyId:
+          description: Job Role Path Family Id
+          type: number
+        jobRolePathFamilyName:
+          description: Job Role Path Family Name e.g. "Solution Delivery", "Knowledge Development"
+          type: string
+        jobRolePathFromDate:
+          description: The date on which a job role path value becomes available for
+            use. e.g. 1900-01-01T00:00:00Z
+          type: string
+        jobRolePathId:
+          description: A foreign key referring to the primary key of job_role_path_ref
+            table. Indetified by the job role path name that the person belongs to. e.g. 1588908
+          type: integer
+          format: int64
+        jobRolePathName:
+          description: Defines the type of work a Firm member in a certain role performs;
+            Roll up of Skill Code e.g. "Expert Consulting", "Solution Delivery"
+          type: string
+        jobRolePathToDate:
+          description: The date on which a job role path value becomes invalid and
+            is no longer applicable. e.g. "2023-03-30T23:54:18Z"
+          type: string
+        jobRoleSubCategoryFromDate:
+          description: The date on which a Role Sub Category Name value becomes available
+            for use. e.g. 1900-01-01 00:00:00.000
+          type: string
+        jobRoleSubCategoryId:
+          description: A foreign key referring to the primary key of the job_role_sub_category_ref
+            table. Identified bye the job role sub category name that the skill code
+            belongs to e.g. 1380709
+          type: integer
+          format: int64
+        jobRoleSubCategoryName:
+          description: 'Indicates the job role sub category name a Firm Members belongs
+            to: It serves to cluster and manage the various paths at the Firm; Roll
+            up of job role path. e.g. "Consulting", "Consulting Services & Support"'
+          type: string
+        jobRoleSubCategoryToDate:
+          description: The date on which a Role Sub Category Name value becomes invalid
+            and is no longer applicable. e.g. 1900-01-01T00:00:00Z
+          type: string
+        jobSubImpactBandCode:
+          description: 'A code which specifies the scope and degree of contribution
+            of a role/skill code; indicates a trajectory within a band; Roll up of
+            Skill Code;  e.g. A, B etc'
+          type: string
+        jobSubImpactBandFromDate:
+          description: The date on which a sub impact band value becomes available
+            for use. e.g. 1900-01-01T00:00:00Z
+          type: string
+        jobSubImpactBandId:
+          description: A foreign key referring to the primary key of the job_sub_impact_band_ref
+            table. Identified the sub impact band code that the job skill code belongs
+            to. e.g. 19, 23
+          type: integer
+          format: int32
+        jobSubImpactBandToDate:
+          description: The date on which a sub impact band value becomes invalid and
+            is no longer applicable. e.g. 1900-01-01T00:00:00Z
+          type: string
+        lastName:
+          description: Last name e.g. Williams
+          type: string
+        leaveStatus:
+          description: Indicates if a firm member is currently on leave. Possible values are Yes, No
+          type: string
+        middleName:
+          description: Middle name e.g. Michael
+          type: string
+        partnerStatus:
+          description: partner Status. Possible values are Y, null
+          type: string
+        preferredName:
+          description: Name by which a Firm Member wishes to be called, e.g., Williams.
+          type: string
+        preferredLastName:
+          description: Preferred Last Name e.g. Monne
+          type: string
+        previousPersonNumber:
+          description: Previous Person Number e.g. 13168112
+          type: string
+        salutation:
+          description: Salutation e.g. "Professor", "Doctor"
+          type: string
+        suffix:
+          description: Suffix e.g. MD, JR
+          type: string
+        updateDate:
+          description: Update Date e.g. "2024-01-25T17:49:59Z"
+          type: string
+        workerStatus:
+          description: Indicates whether Firm Member is Active or Inactive in the
+            Firm e.g. Active, Inactive
+          type: string
+        workerType:
+          description: Indicates a worker type to which a firm member is categorized
+            e.g. ("Alumni","Non Partner", "Partner"..etc)
+          type: string
+        workerTypeId:
+          description: A foreign key referring the primary key of the Worker_Type_Ref
+            Table . Identified by the worker type that the Person belongs to- 'Partner','Non_Parnter',
+            'Contractor'... e.g. 6, -6, -9
+          type: integer
+          format: int32
+        futureHireFlag:
+          description: Flag which indicates whether person is future hire to the Firm. Possible value are Y, N
+          type: string
+        fullName:
+          description: Full Name. e.g. "Bhavya Aggarwal"
+          type: string
+        costCenterCode:
+          description: Cost Center Code e.g. LON11200, RYD12010
+          type: string
+        costCenterName:
+          description: Cost Center Name e.g. "Geographic CCN", "CE/Consulting"
+          type: string
+        costCenterCategory:
+          description: Cost Center Category e.g. "Firm Functions", "Office"
+          type: string
+        costCenterFromDate:
+          description: Cost Center From Date e.g. "2022-01-01T00:00:00Z"
+          type: string
+        costCenterToDate:
+          description: Cost Center To Date e.g. "4999-12-31T00:00:00Z"
+          type: string
+        managementCell:
+          description: Management Cell e.g. Mexico Office, Canada Office
+          type: string
+        emiCode:
+          description: Economic Model Indicator Code e.g. RYD, TOR
+          type: string
+        emiName:
+          description: Economic Model Indicator Name e.g. Riyadh, Toronto
+          type: string
+        clientServing:
+          description: Client Serving. Possible values are Y, N
+          type: string
+        fcat:
+          description: FCAT e.g. 300, 400
+          type: string
+        fcatDesc:
+          description: FCAT Description e.g. "CS NON-PARTNER", "ADMINISTRATIVE"
+          type: string
+
+    Tenure:
+      type: object
+      description: Provides Firm Member/External workers Tenure Data.Custodian System/Application-ePeople
+      properties:
+        adjTenImpLvlMm:
+          description: e.g. 3, 6
+          type: number
+        adjTenImpLvlYymm:
+          description: e.g. 0+3, 0+6
+          type: string
+        adjTenMm:
+          description: e.g. 3, 4
+          type: number
+        adjTenRoleCatMm:
+          description: e.g. 3, 6
+          type: number
+        adjTenRoleCatYymm:
+          description: e.g. 0+3, 0+4
+          type: string
+        adjTenSkillCodeMm:
+          description: e.g. 3, 4
+          type: number
+        adjTenSkillCodeYymm:
+          description: e.g. 0+3, 0+4
+          type: string
+        adjTenYymm:
+          description: e.g. 0+3, 0+4
+          type: string
+        effectiveDate:
+          description: e.g. 2022-02-09T00:00:00Z
+          type: string
+        firmTenMm:
+          description: e.g. 3, 14
+          type: number
+        firmTenYymm:
+          description: e.g. 0+3, 1+2
+          type: string
+        stdTenDevImpLvlYlwMm:
+          description: e.g. 14, 12
+          type: number
+        stdTenDevImpLvlYlwYymm:
+          description: e.g. 1+2, 0+3
+          type: string
+        stdTenImpLvlMm:
+          description: e.g. 3, 4
+          type: number
+        stdTenImpLvlYymm:
+          description: e.g.
+          type: string
+        stdTenMm:
+          description: e.g. 3, 4
+          type: number
+        stdTenRoleCatMm:
+          description: e.g. 3, 14
+          type: number
+        stdTenRoleCatYymm:
+          description: e.g. 0+3, 0+4
+          type: string
+        stdTenSkillCodeMm:
+          description: e.g. 3, 4
+          type: number
+        stdTenSkillCodeYymm:
+          description: e.g. 2+4, 3+2
+          type: string
+        stdTenYymm:
+          description: e.g. 1+3, 7+4
+          type: string
+        tenureAdjusted:
+          description: (Not used) Describes the duration the Person has been with the Firm; Time
+            from hire to today, less any leaves that do not accrue tenure and time
+            as Alumni; also account for any working percentages recorded for the part
+            time, Take Time and Pace programs.
+          type: string
+        tenureAdjustedDev:
+          description: (Not used) Tenure Adjusted Dev
+          type: string
+        tenureAdjustedLoaPtAdj:
+          description: (Not used)
+          type: string
+        tenureInFull:
+          description: (Not used) Describes the duration the Person has been with the Firm; Time
+            from hire to today, less any time as Alumni.
+          type: string
+        tenureInPosition:
+          description: (Not used) Describes the duration the Person has been with the Firm; Time
+            from effective date of any given skill to today, less any leaves that
+            do not accrue tenure and time as Alumni. No. 9 and 10 also account for
+            any working percentages recorded for the part time , Take Time and Pace
+            programs. Previous times in a given position are included.
+          type: string
+        tenureInPositionDev:
+          description: (Not used) tenure In PositionDev
+          type: string
+        tenureInPositionLoaPtAdj:
+          description: (Not used) tenure In PositionLoaPtAdj
+          type: string
+        tenureSinceAscDev:
+          description: (Not used)
+          type: string
+        tenureSinceAssociate:
+          description: (Not used)Describes the duration the Person has been with the Firm; Time
+            from effective date of first associate skill to today, less any leaves
+            that do not accrue tenure and time as Alumni; also account for any working
+            percentages recorded for the part time , Take Time and Pace programs.
+          type: string
+        tenureSinceAssociateLoaPtAdj:
+          description: e.g.
+          type: string
+        updateDate:
+          description: Update Date e.g. 2024-01-25T17:49:59Z
+          type: string
+
+    FacetCount:
+      type: object
+      description: List of Facets for the query search
+      properties:
+        facet_fields:
+          $ref: '#/components/schemas/FacetFields'
+        facet_queries:
+          description: Facet Queries
+          type: object
+        facet_intervals:
+          description: Facet Intervals
+          type: object
+        facet_ranges:
+          description: Facet Ranges
+          type: object
+        facet_heatmaps:
+          description: Facet Heatmaps
+          type: object
+
+    Objarray:
+      type: object
+      properties:
+        fmnos:
+          description: comma separated list of fmnos
+          items:
+            type: object
+          type: array
+
+    CommonRequestBodyPO:
+      required:
+        - q
+      type: object
+      description: Request body need to be send with POST request
+      properties:
+        q:
+          type: string
+          description:  The query string need to pass for request filters. If not sure, please send this object as '*'.
+        omitNullFields:
+          type: boolean
+          description:  If you want fields with Null values to be present in response. Default value is TRUE.
+        offset:
+          type: integer
+          description: Indicates start of record. Start of record by default is from 1. Use this in combination with limit for paginating results
+          format: int32
+        limit:
+          type: integer
+          description: Indicates no of records to be returned. Default is 10. Use this in combination with offset for paginating results
+          format: int32
+        fields:
+          type: array
+          description: |-
+            Use this to determine the fields returned in the response. Send the required fields as a LIST.
+            Ex: ["core.fmno","contact.emails.emailAddress"]
+            If not passed, BAD request error code would be returned by API
+          items:
+            type: string
+        sort:
+          type: object
+          description: |-
+            Returns the record in sorted order.
+            Allowed value: fieldname asc or fieldname desc sent in key, value pair where key is fieldname and value is required sorting order i.e. 'asc' or 'desc'
+            (where fieldname can be core.fmno, core.firstName, etc.)
+          additionalProperties:
+            type: string
+        dateRange:
+          type: string
+          description: |-
+            Returns the records available per supplied date range.
+            Allowed value: fieldname startDate endDate. DateTime should be in yyyy-mm-ddThh:mm:ssZ format.
+            Ex: "hr.hireDate 2015-02-21T09:42:12Z 2023-02-21T10:36:08Z"
+            (where fieldname can be any date type field)
+        filters:
+          type: object
+          description: |-
+            Returns the records per different filters send in the request
+            Allowed value: Different filters sent in key, value pair where key is fieldname and value is the filter condition.
+            Ex: "core.jobImpactBandCode": "5"
+            (where fieldname can be core.fmno, core.firstName, etc.)
+          additionalProperties:
+            type: string
+
+    FacetFields:
+      type: object
+      description: Contains facet field details for given query search
+      properties:
+        core.geoLocationName:
+          type: object
+          additionalProperties:
+            type: integer
+            format: int64
+        core.gocOfficeDesc:
+          type: object
+          additionalProperties:
+            type: integer
+            format: int64
+        core.jobRoleCategoryName:
+          type: object
+          additionalProperties:
+            type: integer
+            format: int64
+        core.jobRoleSubCategoryName:
+          type: object
+          additionalProperties:
+            type: integer
+            format: int64
+        core.jobRolePathName:
+          type: object
+          additionalProperties:
+            type: integer
+            format: int64
+
+    PersonFmnoList:
+      type: object
+      properties:
+        fmnos:
+          description: comma separated list of fmnos
+          items:
+            type: string
+          type: array
